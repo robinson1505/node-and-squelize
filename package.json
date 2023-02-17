@@ -1,0 +1,27 @@
+{
+  "name": "node-crud",
+  "version": "1.0.0",
+  "description": "nodejs and sequilizer crud operation with mvc architectures",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/robinson1505/node-and-squelize.git"
+  },
+  "author": "robinson",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/robinson1505/node-and-squelize/issues"
+  },
+  "homepage": "https://github.com/robinson1505/node-and-squelize#readme",
+  "dependencies": {
+    "body-parser": "^1.20.1",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "mysql2": "^3.1.2",
+    "sequelize": "^6.28.0"
+  }
+}
