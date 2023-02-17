@@ -1,0 +1,113 @@
+Sure, here's an example of how to create a Node.js Rest API with Express, Sequelize, and MySQL using MVC architecture and a config file. This example assumes you have already set up your MySQL database and have installed the necessary dependencies (including express, sequelize, mysql2, and dotenv).
+
+First, create a .env file in the root of your project and add the following environment variables:
+
+makefile
+Copy code
+DB_HOST=localhost
+DB_USER=root
+DB_PASSWORD=password
+DB_NAME=my_database
+Next, create a config.js file in a config directory at the root of your project. This file will contain your Sequelize configuration:
+
+javascript
+Copy code
+require('dotenv').config();
+
+module.exports = {
+  development: {
+    username: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME,
+    host: process.env.DB_HOST,
+    dialect: 'mysql'
+  },
+  test: {
+    username: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME,
+    host: process.env.DB_HOST,
+    dialect: 'mysql'
+  },
+  production: {
+    username: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME,
+    host: process.env.DB_HOST,
+    dialect: 'mysql'
+  }
+};
+Create a db.js file in a models directory at the root of your project. This file will define your Sequelize models and associations:
+
+javascript
+Copy code
+const { Sequelize } = require('sequelize');
+const config = require('../config/config');
+
+const sequelize = new Sequelize(config.development);
+
+const db = {};
+
+db.Sequelize = Sequelize;
+db.sequelize = sequelize;
+
+// Define your models here
+const User = sequelize.define('User', {
+  firstName: {
+    type: Sequelize.STRING,
+    allowNull: false
+  },
+  lastName: {
+    type: Sequelize.STRING,
+    allowNull: false
+  },
+  email: {
+    type: Sequelize.STRING,
+    allowNull: false,
+    unique: true
+  }
+});
+
+const Post = sequelize.define('Post', {
+  title: {
+    type: Sequelize.STRING,
+    allowNull: false
+  },
+  content: {
+    type: Sequelize.TEXT,
+    allowNull: false
+  }
+});
+
+// Define your associations here
+User.hasMany(Post, { as: 'posts' });
+Post.belongsTo(User);
+
+db.User = User;
+db.Post = Post;
+
+module.exports = db;
+Create a user.controller.js file in a controllers directory at the root of your project. This file will contain the logic for handling user-related routes:
+
+javascript
+Copy code
+const { User } = require('../models');
+
+// GET /users
+exports.getAllUsers = async (req, res) => {
+  try {
+    const users = await User.findAll();
+    res.json(users);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+// POST /users
+exports.createUser = async (req, res) => {
+  try {
+    const { firstName, lastName, email } = req.body;
+    const user = await User.create({ firstName, lastName, email });
+    res.json(user);
+  } catch (err) {
